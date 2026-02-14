@@ -27,38 +27,46 @@ let renderDistroName (distroId: string) (color: Color) =
   figText :> IRenderable
 
 let displayInfo () =
-  let config = Config.loadConfig ()
-  Config.createDefaultConfigFile()
-  
-  let info = systemInfo ()
-  let textColor = getColorFromString config.textColor
+    let config = Config.loadConfig ()
+    Config.createDefaultConfigFile()
+    
+    let info = systemInfo ()
+    let textColor = getColorFromString config.textColor
 
-  let (rows: IRenderable seq) =
-    seq {
-      Text($"Distribution: {info.distroName}", Style(Color.HotPink))
-      Text($"Kernel: {info.kernelName}", Style(textColor))
-      Text($"Shell: {info.shell}", Style(textColor))
-      Text($"User: {info.user}", Style(Color.Yellow))
-      Text($"Hostname: {info.hostName}", Style(Color.Yellow))
-      Text($"Uptime: {info.upTime}", Style(Color.Blue))
-      Text($"Memory: {info.memInfo}", Style(Color.Blue))
-      Text($"CPU: {info.cpuModel}", Style(Color.Blue))
-      Text($"LocalIP: {info.localIp}", Style(Color.Green))
-    }
+    let (rows: IRenderable seq) =
+        seq {
+            Text($"Distribution: {info.distroName}", Style(Color.HotPink))
+            Text($"Kernel: {info.kernelName}", Style(textColor))
+            Text($"Shell: {info.shell}", Style(textColor))
+            Text($"User: {info.user}", Style(Color.Yellow))
+            Text($"Hostname: {info.hostName}", Style(Color.Yellow))
+            Text($"Uptime: {info.upTime}", Style(Color.Blue))
+            Text($"Memory: {info.memInfo}", Style(Color.Blue))
+            Text($"CPU: {info.cpuModel}", Style(Color.Blue))
+            Text($"LocalIP: {info.localIp}", Style(Color.Green))
+        }
 
-  let displayPanel =
-    match config.displayMode with
-    | Logo -> loadLogo info.distroId
-    | DistroName -> renderDistroName info.distroId textColor
+    let textPanel = Rows rows :> IRenderable
 
-  let textPanel = Rows rows :> IRenderable
+    let headerPanel : IRenderable =
+        match config.displayMode with
+        | DistroName ->
+            renderDistroName info.distroId textColor
 
-  let columns =
-    match config.logoPosition with
-    | Left -> Columns [displayPanel; textPanel]
-    | Right -> Columns [textPanel; displayPanel]
+        | Logo ->
+            match config.logoPosition with
+            | Left  -> Columns [ loadLogo info.distroId; textPanel ] :> IRenderable
+            | Right -> Columns [ textPanel; loadLogo info.distroId ] :> IRenderable
 
-  let finalLayout = columns :> IRenderable
-  
-  AnsiConsole.Write(finalLayout)
+    let finalLayout =
+        match config.displayMode with
+        | DistroName ->
+            Rows [
+                headerPanel
+                textPanel
+            ] :> IRenderable
 
+        | Logo ->
+            headerPanel
+
+    AnsiConsole.Write(finalLayout)
