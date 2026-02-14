@@ -7,3 +7,4 @@ nuget xunit
 nuget xunit.runner.visualstudio
 nuget coverlet.collector
 nuget FSharp.Core
+nuget System.Management

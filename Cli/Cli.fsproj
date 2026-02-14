@@ -11,7 +11,7 @@
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/lqdev/fitch</RepositoryUrl>
-    <Description>Command line system information display utility for Linux systems built with .NET (F#).</Description>
+    <Description>Command line system information display utility for Windows and Linux systems built with .NET (F#).</Description>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Program.fs" />

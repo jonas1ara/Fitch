@@ -8,7 +8,10 @@
     <Compile Include="Types.fs" />
     <Compile Include="Colorize.fs" />
     <Compile Include="NeofetchLogos.fs" />
+    <Compile Include="SystemInfoLinux.fs" />
+    <Compile Include="SystemInfoWindows.fs" />
     <Compile Include="SystemInfo.fs" />
+    <Compile Include="Config.fs" />
     <Compile Include="DisplayInfo.fs" />
   </ItemGroup>
   <ItemGroup>

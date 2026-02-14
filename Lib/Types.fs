@@ -16,3 +16,16 @@ type DistroLogo =
   { distro: string
     logo: string
     colors: string list }
+
+type DisplayMode =
+  | Logo
+  | DistroName
+
+type LogoPosition =
+  | Left
+  | Right
+
+type Config =
+  { displayMode: DisplayMode
+    logoPosition: LogoPosition
+    textColor: string }
