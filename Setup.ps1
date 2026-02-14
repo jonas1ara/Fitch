@@ -30,6 +30,9 @@ dotnet tool uninstall -g fitch
 # Install the new version from local source
 dotnet tool install -g fitch --add-source nupkg
 
+# Back to root
+cd ..
+
 Write-Host " "
 Write-Host "Installation complete!"
 Write-Host "You can now run 'fitch' from anywhere in your terminal."
