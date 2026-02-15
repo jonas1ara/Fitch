@@ -178,13 +178,38 @@ let getGpuInfo () =
         line.Contains("VGA", StringComparison.OrdinalIgnoreCase) || 
         line.Contains("3D", StringComparison.OrdinalIgnoreCase) ||
         line.Contains("Display", StringComparison.OrdinalIgnoreCase))
+      |> List.filter (fun line -> not (line.Contains("controller:")))
     
     match gpuLines with
     | [] -> None
     | line :: _ ->
-      let parts = line.Split(':')
-      if parts.Length >= 3 then
-        Some (parts.[2].Trim())
+      // Formato típico: "01:00.0 VGA compatible controller: NVIDIA Corporation ..."
+      // Queremos solo la parte después de ": "
+      let parts = line.Split([|": "|], StringSplitOptions.None)
+      if parts.Length >= 2 then
+        let gpuName = parts.[1].Trim()
+        // Si contiene "Corporation", "Technologies", etc., limpiar
+        let cleanedName = 
+          if gpuName.Contains("Corporation") then
+            gpuName.Split([|" Corporation "|], StringSplitOptions.None).[1].Trim()
+          elif gpuName.Contains("Technologies Inc") then
+            gpuName.Split([|" Technologies Inc "|], StringSplitOptions.None).[1].Trim()
+          elif gpuName.Contains("Advanced Micro Devices") then
+            gpuName.Replace("Advanced Micro Devices, Inc. [AMD/ATI]", "AMD").Trim()
+          else
+            gpuName
+        
+        // Eliminar información entre corchetes
+        let finalName = 
+          if cleanedName.Contains("[") then
+            cleanedName.Split('[').[0].Trim()
+          else
+            cleanedName
+        
+        if finalName.Length > 0 && not (finalName.StartsWith("00.0")) then
+          Some finalName
+        else
+          None
       else
         None
   with
