@@ -193,6 +193,13 @@ let getGpuInfo () =
         // Limpiar según el fabricante
         let cleanedGpu = 
           match vendor with
+          | v when v.Contains("Microsoft Corporation") ->
+              // WSL - Mostrar el driver virtual de Microsoft
+              if device.Contains("Basic Render") then
+                "Microsoft Basic Render Driver"
+              else
+                "Microsoft Virtual Display"
+          
           | v when v.Contains("NVIDIA") ->
               let deviceName = 
                 if device.Contains("[") && device.Contains("]") then
