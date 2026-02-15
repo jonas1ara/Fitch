@@ -8,11 +8,10 @@ let configDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder
 let configPath = Path.Combine(configDir, ".fitch")
 
 let defaultConfig =
-  { displayMode = DistroName
-    logoPosition = Right
-    textColor = "Blue"
-    distroNameLabelColor = "Blue"
-    distroNameHeaderColor = "Blue" }
+  { displayMode = Logo
+    logoPosition = Left
+    distroNameLabelColor = "Grey"
+    distroNameHeaderColor = "Grey" }
 
 let parseDisplayMode (value: string) =
   match value.ToLower().Trim() with
@@ -53,10 +52,6 @@ let parseTomlConfig (content: string) =
     |> Option.map parseLogoPosition
     |> Option.defaultValue defaultConfig.logoPosition
 
-  let textColor =
-    settings |> Map.tryFind "textcolor"
-    |> Option.defaultValue defaultConfig.textColor
-
   let distroNameLabelColor =
     settings |> Map.tryFind "distronamelabelcolor"
     |> Option.defaultValue defaultConfig.distroNameLabelColor
@@ -67,7 +62,6 @@ let parseTomlConfig (content: string) =
 
   { displayMode = displayMode
     logoPosition = logoPosition
-    textColor = textColor
     distroNameLabelColor = distroNameLabelColor
     distroNameHeaderColor = distroNameHeaderColor }
 
@@ -87,30 +81,27 @@ let createDefaultConfigFile () =
       Directory.CreateDirectory configDir |> ignore
 
     if not (File.Exists configPath) then
-      let defaultContent = """# Configuración de Fitch
+      let defaultContent = """# Fitch Configuration
 
-# Modo de visualización: "logo" o "distroname"
+# Display mode: "logo" or "distroname"
 displaymode = "logo"
 
-# Posición del logo: "left" o "right"
+# Logo position: "left" or "right"
 logoposition = "left"
 
-# Color del texto: nombre de color Spectre (HotPink, Yellow, Blue, Green, etc.)
-textcolor = "Blue"
-
 # ============================================
-# Colores para modo DistroName (solo aplican cuando displaymode = "distroname")
+# Colors for DistroName mode (only apply when displaymode = "distroname")
 # ============================================
 
-# Color de las etiquetas (Distribution:, Kernel:, etc.)
+# Color for labels (Distribution:, Kernel:, etc.) and user@hostname
 distronamelabelcolor = "Blue"
 
-# Color del header (usuario@hostname y nombre de la distro en FigletText)
+# Color for the header (distro name in FigletText)
 distronameheadercolor = "Grey"
 
-# Colores disponibles: Black, Red, Green, Yellow, Blue, Magenta, Cyan, White,
-# Grey, DarkRed, DarkGreen, DarkYellow, DarkBlue, DarkMagenta, DarkCyan,
-# HotPink, Orange1, Purple, Teal, etc.
+# Available colors: Black, Red, Green, Yellow, Blue, White, Grey,
+# DarkRed, DarkGreen, DarkBlue, DarkMagenta, DarkCyan,
+# HotPink, Orange, Purple, Teal, Aqua, Fuchsia, Lime, Maroon, Navy, Olive, Silver
 """
       File.WriteAllText(configPath, defaultContent)
   with

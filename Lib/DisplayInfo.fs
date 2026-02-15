@@ -90,7 +90,7 @@ let displayInfo () =
 
     let (rows: IRenderable seq) =
         seq {
-            Text($"{info.user}@{info.hostName}", Style(colorScheme.HeaderColor))
+            Text($"{info.user}@{info.hostName}", Style(colorScheme.LabelColor))
             let separator = String.replicate (info.user.Length + info.hostName.Length + 1) "─"
             Text(separator, Style(Color.White))
             createInfoLine "Distribution:" info.distroName
