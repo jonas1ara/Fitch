@@ -9,11 +9,11 @@ A fast, cross-platform system information tool written in F#.
 
 ## About This Fork
 
-This is a maintained and actively developed fork of the original [Fitch](https://github.com/lqdev/fitch) project created by **Luis Quintanilla** ([@lquintanilla](https://github.com/lquintanilla)) and **Luis Angel Mendez Gortz** ([@lamg](https://github.com/lamg)). 
+This is a maintained and actively developed fork of the original [Fitch](https://github.com/lqdev/fitch) project created by **Luis Quintanilla** ([@lquintanilla](https://github.com/lquintanilla)) and **Luis Angel Mendez Gort** ([@lamg](https://github.com/lamg)). 
 
 The original project brought system information display to Linux using F#. This fork continues that vision with major enhancements and ongoing maintenance.
 
-**Original authors**: Luis Quintanilla, Luis Angel Mendez Gortz  
+**Original authors**: Luis Quintanilla, Luis Angel Mendez Gort  
 **Current maintainer**: Jonas Lara ([@jonas1ara](https://github.com/jonas1ara))
 
 <details>
@@ -378,7 +378,7 @@ This design allows:
 
 MIT License - See [LICENSE](LICENSE) file for details.
 
-Original work Copyright (c) 2022-2024 Luis Quintanilla, Luis Angel Mendez Gortz  
+Original work Copyright (c) 2022-2024 Luis Quintanilla, Luis Angel Mendez Gort  
 Modified work Copyright (c) 2026 Jonas Lara
 
 ---
@@ -392,7 +392,7 @@ Modified work Copyright (c) 2026 Jonas Lara
 
 **Original Authors:**
 - Luis Quintanilla ([@lquintanilla](https://github.com/lquintanilla))
-- Luis Angel Mendez Gortz ([@lamg](https://github.com/lamg))
+- Luis Angel Mendez Gort ([@lamg](https://github.com/lamg))
 
 **Inspiration:**
 - [Nitch](https://github.com/unxsh/nitch) - Minimal system information tool
