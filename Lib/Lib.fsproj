@@ -6,8 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Types.fs" />
-    <Compile Include="Colorize.fs" />
-    <Compile Include="NeofetchLogos.fs" />
     <Compile Include="SystemInfoLinux.fs" />
     <Compile Include="SystemInfoWindows.fs" />
     <Compile Include="SystemInfo.fs" />
@@ -15,7 +13,7 @@
     <Compile Include="DisplayInfo.fs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Logos\*.txt" />
+    <EmbeddedResource Include="Logos\*.png" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

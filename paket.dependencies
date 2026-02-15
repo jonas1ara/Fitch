@@ -1,6 +1,7 @@
 source https://api.nuget.org/v3/index.json
 
 nuget Spectre.Console
+nuget Spectre.Console.ImageSharp
 nuget ByteSize
 nuget Microsoft.NET.Test.Sdk
 nuget xunit

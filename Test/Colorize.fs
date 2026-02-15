@@ -1,10 +1,11 @@
-module Colorize
+module DisplayInfoTest
 
-open System
 open Xunit
 open Lib
 
 [<Fact>]
-let ``Colorize fedora`` () =
-  NeofetchLogos.logoDictionary |> Map.iter (fun _ v -> printfn "%s" (Colorize.colorize v); Console.ResetColor())
+let ``Load logo test`` () =
+  // Test que se pueda cargar un logo PNG
+  let logo = DisplayInfo.loadLogo "linux"
+  Assert.NotNull(logo)
 

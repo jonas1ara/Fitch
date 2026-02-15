@@ -1,19 +1,30 @@
 ﻿module DisplayInfo
 
-open Lib
+open System.Reflection
 open Spectre.Console
 open Spectre.Console.Rendering
 open Lib.SystemInfo
 open Lib.Types
 
 let loadLogo (logo: string) =
-  NeofetchLogos.logoDictionary.TryGetValue logo
-  |> function
-    | true, l -> l
-    | false, _ -> NeofetchLogos.logoDictionary["unknown"]
-  |> Colorize.colorize
-  |> Text
-  :> IRenderable
+  let assembly = Assembly.GetExecutingAssembly()
+  // Convertir a minúsculas para hacer la búsqueda case-insensitive
+  let logoLower = logo.ToLower()
+  let resourceName = $"Lib.Logos.{logoLower}.png"
+  
+  use stream = assembly.GetManifestResourceStream(resourceName)
+  
+  let image = 
+    if stream <> null then
+      CanvasImage(stream)
+    else
+      // Fallback a logo genérico de Linux si no existe el específico
+      let fallbackStream = assembly.GetManifestResourceStream("Lib.Logos.linux.png")
+      CanvasImage(fallbackStream)
+  
+  image.MaxWidth <- 16
+  image.PixelWidth <- 2
+  image :> IRenderable
 
 let getColorFromString (colorName: string) =
   try
@@ -27,8 +38,8 @@ let renderDistroName (distroId: string) (color: Color) =
   figText :> IRenderable
 
 let displayInfo () =
-    let config = Config.loadConfig ()
-    Config.createDefaultConfigFile()
+    let config = Lib.Config.loadConfig ()
+    Lib.Config.createDefaultConfigFile()
     
     let info = systemInfo ()
     let textColor = getColorFromString config.textColor
