@@ -31,5 +31,5 @@ type LogoPosition =
 type Config =
   { displayMode: DisplayMode
     logoPosition: LogoPosition
-    distroNameLabelColor: string  // Color para etiquetas en modo DistroName
-    distroNameHeaderColor: string } // Color para header en modo DistroName
+    distroNameLabelColor: string  // Color for labels in DistroName mode
+    distroNameHeaderColor: string } // Color for header in DistroName mode

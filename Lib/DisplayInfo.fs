@@ -24,9 +24,9 @@ let loadLogo (logo: string) =
   
   image.MaxWidth <- 16
   
-  // Agregar margen al logo
+  // Add margin to logo
   let padder = Padder(image :> IRenderable)
-  padder.Padding <- Padding(4, 2, 0, 2) // izquierda, arriba, derecha, abajo
+  padder.Padding <- Padding(4, 2, 0, 2) // left, top, right, bottom
   padder :> IRenderable
 
 let getColorFromString (colorName: string) =
@@ -70,19 +70,19 @@ let displayInfo () =
     
     let info = systemInfo ()
     
-    // Determinar qué esquema de colores usar
+    // Determine which color scheme to use
     let colorScheme = 
         match config.displayMode with
         | DistroName ->
-            // Usar colores configurables para modo DistroName
+            // Use configurable colors for DistroName mode
             { LabelColor = getColorFromString config.distroNameLabelColor
               ValueColor = Color.White
               HeaderColor = getColorFromString config.distroNameHeaderColor }
         | Logo ->
-            // Usar colores por distribución para modo Logo
+            // Use distribution-specific colors for Logo mode
             getColorScheme info.distroId
 
-    // Función auxiliar para crear líneas con etiqueta y valor
+    // Helper function to create lines with label and value
     let createInfoLine (label: string) (value: string) =
         let labelPart = Text(label, Style(colorScheme.LabelColor))
         let valuePart = Text(value, Style(colorScheme.ValueColor))
@@ -103,12 +103,12 @@ let displayInfo () =
             createInfoLine "Memory:" info.memInfo
             createInfoLine "CPU:" info.cpuModel
             
-            // Mostrar GPU solo si existe
+            // Show GPU only if it exists
             match info.gpu with
             | Some gpu -> createInfoLine "GPU:" gpu
             | None -> ()
             
-            // Mostrar batería solo si existe
+            // Show battery only if it exists
             match info.battery with
             | Some battery -> createInfoLine "Battery:" battery
             | None -> ()
@@ -124,7 +124,7 @@ let displayInfo () =
             renderDistroName info.distroId colorScheme.HeaderColor
 
         | Logo ->
-            // Padding solo para alinear verticalmente
+            // Padding only for vertical alignment
             let alignedTextPanel = 
                 let padder = Padder(textPanel)
                 padder.Padding <- Padding(4, 2, 0, 0) 
@@ -134,12 +134,12 @@ let displayInfo () =
             | Left  -> 
                 let cols = Columns [ loadLogo info.distroId; alignedTextPanel ]
                 cols.Padding <- Padding(0, 0, 0, 0)
-                cols.Expand <- false // Collapse para ajustar al contenido
+                cols.Expand <- false // Collapse to fit content
                 cols :> IRenderable
             | Right -> 
                 let cols = Columns [ alignedTextPanel; loadLogo info.distroId ]
                 cols.Padding <- Padding(0, 0, 0, 0)
-                cols.Expand <- false // Collapse para ajustar al contenido
+                cols.Expand <- false // Collapse to fit content
                 cols :> IRenderable
 
     let finalLayout =

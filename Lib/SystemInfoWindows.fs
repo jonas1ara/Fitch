@@ -105,17 +105,17 @@ let getShell () =
 
 let getTerminal () =
   try
-    // Windows Terminal tiene la variable WT_SESSION
+    // Windows Terminal has the WT_SESSION variable
     let wtSession = Environment.GetEnvironmentVariable("WT_SESSION")
     if not (isNull wtSession) then
       "Windows Terminal"
     else
-      // Verificar otros terminales conocidos
+      // Check other known terminals
       let termProgram = Environment.GetEnvironmentVariable("TERM_PROGRAM")
       if not (isNull termProgram) then
         termProgram
       else
-        // Intentar detectar por el proceso padre
+        // Try to detect via parent process
         try
           let currentProcess = Process.GetCurrentProcess()
           let parentProcess = 

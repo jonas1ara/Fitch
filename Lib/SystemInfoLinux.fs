@@ -101,12 +101,12 @@ let getShell (envVar: string) =
 
 let getTerminal () =
   try
-    // TERM_PROGRAM es usado por varios terminales modernos
+    // TERM_PROGRAM is used by several modern terminals
     let termProgram = Environment.GetEnvironmentVariable("TERM_PROGRAM")
     if not (isNull termProgram) then
       termProgram
     else
-      // Verificar variables de entorno específicas de terminales
+      // Check terminal-specific environment variables
       let wtSession = Environment.GetEnvironmentVariable("WT_SESSION")
       let alacritty = Environment.GetEnvironmentVariable("ALACRITTY_SOCKET")
       let kitty = Environment.GetEnvironmentVariable("KITTY_WINDOW_ID")
@@ -121,7 +121,7 @@ let getTerminal () =
       elif not (isNull tmux) then
         "tmux"
       else
-        // Intentar leer del proceso padre
+        // Try to read from parent process
         try
           let ppid = Environment.GetEnvironmentVariable("PPID")
           if not (isNull ppid) then
@@ -139,7 +139,7 @@ let getTerminal () =
               | "wezterm-gui" -> "WezTerm"
               | "foot" -> "Foot"
               | _ -> 
-                  // Verificar el entorno TERM como último recurso
+                  // Check TERM environment as last resort
                   let term = Environment.GetEnvironmentVariable("TERM")
                   if not (isNull term) then term else "Unknown"
             else
@@ -234,18 +234,19 @@ let getGpuInfo () =
     match gpuLines with
     | [] -> None
     | line :: _ ->
-      // Formato lspci -mm: "Slot" "Class" "Vendor" "Device" "SVendor" "SDevice"
-      // Ejemplo: "01:00.0" "VGA compatible controller" "NVIDIA Corporation" "GA107M [GeForce RTX 4050]"
+      // lspci -mm format: "Slot" "Class" "Vendor" "Device" "SVendor" "SDevice"
+      // Example: "01:00.0" "VGA compatible controller" "NVIDIA Corporation" "GA107M [GeForce RTX 4050]"
       let parts = line.Split('"') |> Array.filter (fun s -> s.Trim() <> "")
       
       if parts.Length >= 4 then
         let vendor = parts.[2].Trim()
         let device = parts.[3].Trim()
         
-        // Limpiar según el fabricante
+        // Clean based on vendor
         let cleanedGpu = 
           match vendor with
           | v when v.Contains("Microsoft Corporation") ->
+              // WSL - Show Microsoft virtual driver
               if device.Contains("Basic Render") then
                 "Microsoft Basic Render Driver"
               else
@@ -254,7 +255,7 @@ let getGpuInfo () =
           | v when v.Contains("NVIDIA") ->
               let deviceName = 
                 if device.Contains("[") && device.Contains("]") then
-                  // Extraer contenido entre corchetes: "GA107M [GeForce RTX 4050]" -> "GeForce RTX 4050"
+                  // Extract content between brackets: "GA107M [GeForce RTX 4050]" -> "GeForce RTX 4050"
                   let startIdx = device.IndexOf('[') + 1
                   let endIdx = device.IndexOf(']')
                   device.Substring(startIdx, endIdx - startIdx).Trim()
@@ -288,7 +289,7 @@ let getGpuInfo () =
               $"Intel {deviceName}"
           
           | _ -> 
-              // Otros fabricantes
+              // Other vendors
               $"{vendor} {device}"
         
         if cleanedGpu.Length > 0 then
@@ -302,7 +303,7 @@ let getGpuInfo () =
 
 let getBatteryInfo () =
   try
-    // Buscar en /sys/class/power_supply/BAT0 o BAT1
+    // Search in /sys/class/power_supply/BAT0 or BAT1
     let batteryPaths = ["/sys/class/power_supply/BAT0"; "/sys/class/power_supply/BAT1"]
     
     let batteryPath = 
