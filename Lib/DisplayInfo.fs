@@ -35,6 +35,9 @@ let displayInfo () =
 
     let (rows: IRenderable seq) =
         seq {
+            Text($"{info.user}@{info.hostName}", Style(Color.Green))
+            let separator = String.replicate (info.user.Length + info.hostName.Length + 1) "─"
+            Text(separator, Style(Color.White))
             Text($"Distribution: {info.distroName}", Style(Color.HotPink))
             Text($"Kernel: {info.kernelName}", Style(textColor))
             Text($"Shell: {info.shell}", Style(textColor))
