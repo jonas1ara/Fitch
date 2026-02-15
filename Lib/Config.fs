@@ -10,7 +10,9 @@ let configPath = Path.Combine(configDir, ".fitch")
 let defaultConfig =
   { displayMode = DistroName
     logoPosition = Right
-    textColor = "HotPink" }
+    textColor = "Blue"
+    distroNameLabelColor = "Blue"
+    distroNameHeaderColor = "Blue" }
 
 let parseDisplayMode (value: string) =
   match value.ToLower().Trim() with
@@ -55,9 +57,19 @@ let parseTomlConfig (content: string) =
     settings |> Map.tryFind "textcolor"
     |> Option.defaultValue defaultConfig.textColor
 
+  let distroNameLabelColor =
+    settings |> Map.tryFind "distronamelabelcolor"
+    |> Option.defaultValue defaultConfig.distroNameLabelColor
+
+  let distroNameHeaderColor =
+    settings |> Map.tryFind "distronameheadercolor"
+    |> Option.defaultValue defaultConfig.distroNameHeaderColor
+
   { displayMode = displayMode
     logoPosition = logoPosition
-    textColor = textColor }
+    textColor = textColor
+    distroNameLabelColor = distroNameLabelColor
+    distroNameHeaderColor = distroNameHeaderColor }
 
 let loadConfig () =
   try
@@ -85,6 +97,20 @@ logoposition = "right"
 
 # Color del texto: nombre de color Spectre (HotPink, Yellow, Blue, Green, etc.)
 textcolor = "HotPink"
+
+# ============================================
+# Colores para modo DistroName (solo aplican cuando displaymode = "distroname")
+# ============================================
+
+# Color de las etiquetas (Distribution:, Kernel:, etc.)
+distronamelabelcolor = "Blue"
+
+# Color del header (usuario@hostname y nombre de la distro en FigletText)
+distronameheadercolor = "HotPink"
+
+# Colores disponibles: Black, Red, Green, Yellow, Blue, Magenta, Cyan, White,
+# Grey, DarkRed, DarkGreen, DarkYellow, DarkBlue, DarkMagenta, DarkCyan,
+# HotPink, Orange1, Purple, Teal, etc.
 """
       File.WriteAllText(configPath, defaultContent)
   with

@@ -45,7 +45,18 @@ let displayInfo () =
     Lib.Config.createDefaultConfigFile()
     
     let info = systemInfo ()
-    let colorScheme = getColorScheme info.distroId
+    
+    // Determinar qué esquema de colores usar
+    let colorScheme = 
+        match config.displayMode with
+        | DistroName ->
+            // Usar colores configurables para modo DistroName
+            { LabelColor = getColorFromString config.distroNameLabelColor
+              ValueColor = Color.White
+              HeaderColor = getColorFromString config.distroNameHeaderColor }
+        | Logo ->
+            // Usar colores por distribución para modo Logo
+            getColorScheme info.distroId
 
     // Función auxiliar para crear líneas con etiqueta y valor
     let createInfoLine (label: string) (value: string) =
