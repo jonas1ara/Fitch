@@ -35,7 +35,7 @@ let displayInfo () =
 
     let (rows: IRenderable seq) =
         seq {
-            Text($"{info.user}@{info.hostName}", Style(Color.Green))
+            Text($"{info.user}@{info.hostName}", Style(Color.HotPink))
             let separator = String.replicate (info.user.Length + info.hostName.Length + 1) "─"
             Text(separator, Style(Color.White))
             Text($"Distribution: {info.distroName}", Style(Color.HotPink))
@@ -54,7 +54,7 @@ let displayInfo () =
 
     let alignedTextPanel = 
         let padder = Padder(textPanel)
-        padder.Padding <- Padding(4, 4, 0, 0) 
+        padder.Padding <- Padding(4, 2, 0, 0) 
         padder :> IRenderable
 
     let headerPanel : IRenderable =
