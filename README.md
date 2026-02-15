@@ -22,24 +22,30 @@ The original project brought system information display to Linux using F#. This 
 <br>
 
 ### Original Project (2022-2024)
-- Created by Luis Quintanilla and Luis Angel Mendez Gortz
-- Linux-only support with ASCII art logos
+- Created by Luis Quintanilla
+- Linux-only support with Spectre.Console for rendering
 - Basic system information display
 - Inspiration from Nitch and Neofetch
+- Initial NuGet package release
 
-### Windows Port (2024)
-- Cross-platform support added (Windows 10/11)
-- WMI-based Windows system information gathering
-- Maintained single codebase with runtime OS detection
+### Refactor code and add ASCII art logos (2023)
+- Refactored code for better maintainability
+- Added ASCII art logos for supported distributions
+- Improved configuration system with display modes and color options
 
 ### Current Version (2026)
-- **PNG logo support** - High-quality distribution logos
-- **GPU detection** - NVIDIA, AMD, Intel (Windows, Linux, WSL)
-- **Battery information** - Charge percentage and status
-- **Terminal detection** - Identifies your terminal emulator
-- **Enhanced color schemes** - Distribution-specific RGB colors
-- **Configurable display modes** - Logo and DistroName modes
-- **Improved Setup.sh** - Better dependency checking
+- Port to Windows with WMI-based implementation
+- PNG logo support replacing ASCII art
+- GPU detection (Windows, Linux, WSL)
+- Battery information display
+- Terminal emulator detection
+- Distribution-specific RGB color schemes
+- Enhanced configuration system
+- Implemented DistroName mode with customizable colors
+- Implemented Setup.ps1 for Windows installation
+- Improved Setup.sh with dependency checking
+- Fixed case-sensitivity issues in distribution detection
+- Fixed spacing in columns
 
 ### DistroName Mode - Honoring the Origin
 
@@ -380,7 +386,7 @@ Modified work Copyright (c) 2026 Jonas Lara
 ## Acknowledgements
 
 <details>
-<summary><b>Credits & Inspiration</b></summary>
+<summary><b>🙏 Credits & Inspiration</b></summary>
 
 <br>
 
@@ -442,7 +448,7 @@ Please ensure your code follows F# conventions and includes appropriate tests.
 
 ### v1.0 (2022-2023) - Original
 - Initial Linux support
-- ASCII art logos
+- Linux-only support with Spectre.Console for rendering
 - Basic system information
 - Inspired by Nitch and Neofetch
 - Nuget package release
