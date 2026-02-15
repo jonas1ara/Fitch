@@ -2,7 +2,7 @@
 
 A fast, cross-platform system information tool written in F#.
 
-![Fitch CLI Tool](./images/fitch-display.png)
+![Fitch CLI Tool](./images/fitch.gif)
 
 [![Generic badge](https://img.shields.io/badge/Made%20with-FSharp-rgb(1,143,204).svg)](https://shields.io/)
 ![Tests][tests]
@@ -355,27 +355,26 @@ Please ensure your code follows F# conventions and includes appropriate tests.
 ## Changelog
 
 ### v2.0.0 (2026) - Major Update
-- ✨ PNG logo support replacing ASCII art
-- ✨ GPU detection (Windows, Linux, WSL)
-- ✨ Battery information display
-- ✨ Terminal emulator detection
-- ✨ Distribution-specific RGB color schemes
-- ✨ Enhanced configuration system
-- ✨ Improved Setup.sh with dependency checking
-- 🐛 Fixed case-sensitivity issues
-- 🐛 Fixed spacing in columns
-- 📝 All comments translated to English
+-  Added Windows support with WMI-based system information
+-  PNG logo support replacing ASCII art
+-  GPU detection (Windows, Linux, WSL)
+-  Battery information display
+-  Terminal emulator detection
+-  Distribution-specific RGB color schemes
+-  Enhanced configuration system
+-  Improved Setup.sh with dependency checking
+-  Fixed case-sensitivity issues
+-  Fixed spacing in columns
 
-### v1.x (2024) - Windows Support
-- ✨ Cross-platform support (Windows 10/11)
-- ✨ WMI-based Windows implementation
-- ✨ Runtime OS detection
+### v1.2 (2024) - Refactor and ASCII Implementation
+-  Refactored codebase for better maintainability
+-  Added ASCII art logos for Linux distributions
 
 ### v1.0 (2022-2024) - Original
-- ✨ Initial Linux support
-- ✨ ASCII art logos
-- ✨ Basic system information
-- ✨ Inspired by Nitch and Neofetch
+-  Initial Linux support
+-  Basic system information
+-  Inspired by Nitch and Neofetch
+-  Delivered in Nuget package format
 
 ---
 
