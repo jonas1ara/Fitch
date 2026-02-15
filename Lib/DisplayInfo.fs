@@ -8,7 +8,7 @@ open Lib.Types
 
 let loadLogo (logo: string) =
   let assembly = Assembly.GetExecutingAssembly()
-  // Convertir a minúsculas para hacer la búsqueda case-insensitive
+  
   let logoLower = logo.ToLower()
   let resourceName = $"Lib.Logos.{logoLower}.png"
   
@@ -18,12 +18,12 @@ let loadLogo (logo: string) =
     if stream <> null then
       CanvasImage(stream)
     else
-      // Fallback a logo genérico de Linux si no existe el específico
       let fallbackStream = assembly.GetManifestResourceStream("Lib.Logos.linux.png")
       CanvasImage(fallbackStream)
   
-  image.MaxWidth <- 16
-  image.PixelWidth <- 2
+  // Usar mejor algoritmo de resampling para mayor nitidez
+  image.Resampler <- SixLabors.ImageSharp.Processing.KnownResamplers.Lanczos3
+  image.MaxWidth <- 20
   image :> IRenderable
 
 let getColorFromString (colorName: string) =
@@ -65,7 +65,7 @@ let displayInfo () =
 
     let alignedTextPanel = 
         let padder = Padder(textPanel)
-        padder.Padding <- Padding(4, 2, 0, 0) 
+        padder.Padding <- Padding(0, 2, 0, 0) 
         padder :> IRenderable
 
     let headerPanel : IRenderable =
