@@ -49,7 +49,7 @@ The **DistroName** display mode was part of the original vision - displaying sys
 
 ## Features
 
-✨ **System Information:**
+**System Information:**
 - Distribution/OS name and version
 - Kernel version
 - Terminal emulator
@@ -62,11 +62,11 @@ The **DistroName** display mode was part of the original vision - displaying sys
 - Battery status (optional - on laptops)
 - Local IP address
 
-🎨 **Display Modes:**
+**Display Modes:**
 - **Logo Mode**: Distribution PNG logos with system info
 - **DistroName Mode**: Distribution name in FigletText with customizable colors
 
-🎯 **Supported Platforms:**
+**Supported Platforms:**
 - Linux (Debian, Ubuntu, Fedora, Arch, NixOS, Alpine, Mint)
 - Windows 10/11
 - WSL (Windows Subsystem for Linux)
