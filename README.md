@@ -317,7 +317,7 @@ This design allows:
 
 MIT License - See [LICENSE](LICENSE) file for details.
 
-Original work Copyright (c) 2022-2024 Luis Quintanilla, Luis Angel Mendez Gortz  
+Original work Copyright (c) 2022-2023 Luis Quintanilla, Luis Angel Mendez Gortz  
 Modified work Copyright (c) 2026 [Your Name]
 
 ---
@@ -366,11 +366,11 @@ Please ensure your code follows F# conventions and includes appropriate tests.
 -  Fixed case-sensitivity issues
 -  Fixed spacing in columns
 
-### v1.2 (2024) - Refactor and ASCII Implementation
+### v1.2 (2023) - Refactor and ASCII Implementation
 -  Refactored codebase for better maintainability
 -  Added ASCII art logos for Linux distributions
 
-### v1.0 (2022-2024) - Original
+### v1.0 (2022-2023) - Original
 -  Initial Linux support
 -  Basic system information
 -  Inspired by Nitch and Neofetch
