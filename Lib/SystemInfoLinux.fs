@@ -99,6 +99,58 @@ let getShell (envVar: string) =
   |> Option.map (fun v -> v.Split('/') |> Array.last)
   |> Option.defaultValue ""
 
+let getTerminal () =
+  try
+    // TERM_PROGRAM es usado por varios terminales modernos
+    let termProgram = Environment.GetEnvironmentVariable("TERM_PROGRAM")
+    if not (isNull termProgram) then
+      termProgram
+    else
+      // Verificar variables de entorno específicas de terminales
+      let wtSession = Environment.GetEnvironmentVariable("WT_SESSION")
+      let alacritty = Environment.GetEnvironmentVariable("ALACRITTY_SOCKET")
+      let kitty = Environment.GetEnvironmentVariable("KITTY_WINDOW_ID")
+      let tmux = Environment.GetEnvironmentVariable("TMUX")
+      
+      if not (isNull wtSession) then
+        "Windows Terminal"
+      elif not (isNull alacritty) then
+        "Alacritty"
+      elif not (isNull kitty) then
+        "Kitty"
+      elif not (isNull tmux) then
+        "tmux"
+      else
+        // Intentar leer del proceso padre
+        try
+          let ppid = Environment.GetEnvironmentVariable("PPID")
+          if not (isNull ppid) then
+            let commFile = $"/proc/{ppid}/comm"
+            if File.Exists(commFile) then
+              let parentName = File.ReadAllText(commFile).Trim()
+              match parentName with
+              | "gnome-terminal-" -> "GNOME Terminal"
+              | "konsole" -> "Konsole"
+              | "xfce4-terminal" -> "XFCE Terminal"
+              | "terminator" -> "Terminator"
+              | "tilix" -> "Tilix"
+              | "alacritty" -> "Alacritty"
+              | "kitty" -> "Kitty"
+              | "wezterm-gui" -> "WezTerm"
+              | "foot" -> "Foot"
+              | _ -> 
+                  // Verificar el entorno TERM como último recurso
+                  let term = Environment.GetEnvironmentVariable("TERM")
+                  if not (isNull term) then term else "Unknown"
+            else
+              "Unknown"
+          else
+            "Unknown"
+        with
+        | _ -> "Unknown"
+  with
+  | _ -> "Unknown"
+
 let getLocalIpAddress () =
   let hostName = Dns.GetHostName()
   let addressList = Dns.GetHostEntry(hostName).AddressList |> List.ofArray
@@ -194,7 +246,6 @@ let getGpuInfo () =
         let cleanedGpu = 
           match vendor with
           | v when v.Contains("Microsoft Corporation") ->
-              // WSL - Mostrar el driver virtual de Microsoft
               if device.Contains("Basic Render") then
                 "Microsoft Basic Render Driver"
               else
@@ -249,6 +300,39 @@ let getGpuInfo () =
   with
   | _ -> None
 
+let getBatteryInfo () =
+  try
+    // Buscar en /sys/class/power_supply/BAT0 o BAT1
+    let batteryPaths = ["/sys/class/power_supply/BAT0"; "/sys/class/power_supply/BAT1"]
+    
+    let batteryPath = 
+      batteryPaths 
+      |> List.tryFind Directory.Exists
+    
+    match batteryPath with
+    | None -> None
+    | Some path ->
+        let capacityFile = Path.Combine(path, "capacity")
+        let statusFile = Path.Combine(path, "status")
+        
+        if File.Exists(capacityFile) && File.Exists(statusFile) then
+          let capacity = File.ReadAllText(capacityFile).Trim()
+          let status = File.ReadAllText(statusFile).Trim()
+          
+          let statusText = 
+            match status with
+            | "Charging" -> "Charging"
+            | "Discharging" -> "Discharging"
+            | "Full" -> "Full"
+            | "Not charging" -> "Not charging"
+            | _ -> ""
+          
+          Some $"{capacity}%% {statusText}"
+        else
+          None
+  with
+  | _ -> None
+
 let systemInfo () : Info =
   { distroId = getDistroId "/etc/os-release"
 
@@ -270,4 +354,8 @@ let systemInfo () : Info =
 
     upTime = getUptime "/proc/uptime"
     
-    gpu = getGpuInfo () }
+    gpu = getGpuInfo ()
+    
+    battery = getBatteryInfo ()
+    
+    terminal = getTerminal () }

@@ -95,6 +95,7 @@ let displayInfo () =
             Text(separator, Style(Color.White))
             createInfoLine "Distribution:" info.distroName
             createInfoLine "Kernel:" info.kernelName
+            createInfoLine "Terminal:" info.terminal
             createInfoLine "Shell:" info.shell
             createInfoLine "User:" info.user
             createInfoLine "Hostname:" info.hostName
@@ -105,6 +106,11 @@ let displayInfo () =
             // Mostrar GPU solo si existe
             match info.gpu with
             | Some gpu -> createInfoLine "GPU:" gpu
+            | None -> ()
+            
+            // Mostrar batería solo si existe
+            match info.battery with
+            | Some battery -> createInfoLine "Battery:" battery
             | None -> ()
             
             createInfoLine "LocalIP:" info.localIp

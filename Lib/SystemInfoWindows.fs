@@ -97,9 +97,54 @@ let getShell () =
   try
     let env = Environment.GetEnvironmentVariable("PROMPT")
     if isNull env then
-      "CMD"
-    else
       "PowerShell"
+    else
+      "CMD"
+  with
+  | _ -> "Unknown"
+
+let getTerminal () =
+  try
+    // Windows Terminal tiene la variable WT_SESSION
+    let wtSession = Environment.GetEnvironmentVariable("WT_SESSION")
+    if not (isNull wtSession) then
+      "Windows Terminal"
+    else
+      // Verificar otros terminales conocidos
+      let termProgram = Environment.GetEnvironmentVariable("TERM_PROGRAM")
+      if not (isNull termProgram) then
+        termProgram
+      else
+        // Intentar detectar por el proceso padre
+        try
+          let currentProcess = Process.GetCurrentProcess()
+          let parentProcess = 
+            use searcher = new System.Management.ManagementObjectSearcher($"SELECT ParentProcessId FROM Win32_Process WHERE ProcessId = {currentProcess.Id}")
+            let results = searcher.Get()
+            let mutable parentId = 0
+            for result in results do
+              let obj = result["ParentProcessId"]
+              parentId <- System.Convert.ToInt32(obj)
+            if parentId > 0 then
+              Some (Process.GetProcessById(parentId))
+            else
+              None
+          
+          match parentProcess with
+          | Some proc ->
+              let processName = proc.ProcessName.ToLower()
+              match processName with
+              | name when name.Contains("windowsterminal") -> "Windows Terminal"
+              | name when name.Contains("conemu") -> "ConEmu"
+              | name when name.Contains("alacritty") -> "Alacritty"
+              | name when name.Contains("hyper") -> "Hyper"
+              | name when name.Contains("cmd") -> "CMD"
+              | name when name.Contains("powershell") -> "PowerShell"
+              | name when name.Contains("pwsh") -> "PowerShell Core"
+              | _ -> "Unknown"
+          | None -> "Unknown"
+        with
+        | _ -> "Unknown"
   with
   | _ -> "Unknown"
 
@@ -175,6 +220,31 @@ let getGpuInfo () =
   with
   | _ -> None
 
+let getBatteryInfo () =
+  try
+    let wmiQuery = "SELECT EstimatedChargeRemaining, BatteryStatus FROM Win32_Battery"
+    let searcher = new System.Management.ManagementObjectSearcher(wmiQuery)
+    let collection = searcher.Get()
+    
+    let batteries = collection |> Seq.cast<System.Management.ManagementObject> |> Seq.toList
+    
+    match batteries with
+    | [] -> None
+    | battery :: _ ->
+        let charge = battery["EstimatedChargeRemaining"] :?> uint16
+        let status = battery["BatteryStatus"] :?> uint16
+        
+        let statusText = 
+          match status with
+          | 2us -> "Charging"
+          | 1us -> "Discharging"
+          | 3us -> "Full"
+          | _ -> ""
+        
+        Some $"{charge}%% {statusText}"
+  with
+  | _ -> None
+
 let systemInfo () : Info =
   { distroId = getDistroId ()
     distroName = getDistroName ()
@@ -186,4 +256,6 @@ let systemInfo () : Info =
     cpuModel = getCPUModel ()
     localIp = getLocalIpAddress ()
     upTime = getUptime ()
-    gpu = getGpuInfo () }
+    gpu = getGpuInfo ()
+    battery = getBatteryInfo ()
+    terminal = getTerminal () }

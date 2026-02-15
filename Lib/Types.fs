@@ -11,7 +11,9 @@ type Info =
     cpuModel: string
     gpu: string option
     localIp: string
-    upTime: string }
+    upTime: string
+    battery: string option
+    terminal: string }
 
 type DistroLogo =
   { distro: string
