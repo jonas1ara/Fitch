@@ -25,7 +25,7 @@ let loadLogo (logo: string) =
   
   // Agregar margen al logo
   let padder = Padder(image :> IRenderable)
-  padder.Padding <- Padding(10, 2, 0, 2) // izquierda, arriba, derecha, abajo
+  padder.Padding <- Padding(4, 2, 0, 2) // izquierda, arriba, derecha, abajo
   padder :> IRenderable
 
 let getColorFromString (colorName: string) =
@@ -64,21 +64,29 @@ let displayInfo () =
 
     let textPanel = Rows rows :> IRenderable
     
-
-    let alignedTextPanel = 
-        let padder = Padder(textPanel)
-        padder.Padding <- Padding(1, 2, 0, 0) // Ajustar espacio entre logo y texto
-        padder :> IRenderable
-
     let headerPanel : IRenderable =
         match config.displayMode with
         | DistroName ->
             renderDistroName info.distroId textColor
 
         | Logo ->
+            // Padding solo para alinear verticalmente
+            let alignedTextPanel = 
+                let padder = Padder(textPanel)
+                padder.Padding <- Padding(4, 2, 0, 0) 
+                padder :> IRenderable
+            
             match config.logoPosition with
-            | Left  -> Columns [ loadLogo info.distroId; alignedTextPanel ] :> IRenderable
-            | Right -> Columns [ alignedTextPanel; loadLogo info.distroId ] :> IRenderable
+            | Left  -> 
+                let cols = Columns [ loadLogo info.distroId; alignedTextPanel ]
+                cols.Padding <- Padding(0, 0, 0, 0)
+                cols.Expand <- false // Collapse para ajustar al contenido
+                cols :> IRenderable
+            | Right -> 
+                let cols = Columns [ alignedTextPanel; loadLogo info.distroId ]
+                cols.Padding <- Padding(0, 0, 0, 0)
+                cols.Expand <- false // Collapse para ajustar al contenido
+                cols :> IRenderable
 
     let finalLayout =
         match config.displayMode with
