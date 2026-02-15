@@ -47,20 +47,26 @@ let displayInfo () =
     let info = systemInfo ()
     let colorScheme = getColorScheme info.distroId
 
+    // Función auxiliar para crear líneas con etiqueta y valor
+    let createInfoLine (label: string) (value: string) =
+        let labelPart = Text(label, Style(colorScheme.LabelColor))
+        let valuePart = Text(value, Style(colorScheme.ValueColor))
+        Columns([labelPart :> IRenderable; valuePart :> IRenderable], Padding = Padding(0, 0, 1, 0), Expand = false) :> IRenderable
+
     let (rows: IRenderable seq) =
         seq {
             Text($"{info.user}@{info.hostName}", Style(colorScheme.HeaderColor))
             let separator = String.replicate (info.user.Length + info.hostName.Length + 1) "─"
             Text(separator, Style(Color.White))
-            Markup($"[{colorScheme.LabelColor}]Distribution:[/] [{colorScheme.ValueColor}]{info.distroName}[/]")
-            Markup($"[{colorScheme.LabelColor}]Kernel:[/] [{colorScheme.ValueColor}]{info.kernelName}[/]")
-            Markup($"[{colorScheme.LabelColor}]Shell:[/] [{colorScheme.ValueColor}]{info.shell}[/]")
-            Markup($"[{colorScheme.LabelColor}]User:[/] [{colorScheme.ValueColor}]{info.user}[/]")
-            Markup($"[{colorScheme.LabelColor}]Hostname:[/] [{colorScheme.ValueColor}]{info.hostName}[/]")
-            Markup($"[{colorScheme.LabelColor}]Uptime:[/] [{colorScheme.ValueColor}]{info.upTime}[/]")
-            Markup($"[{colorScheme.LabelColor}]Memory:[/] [{colorScheme.ValueColor}]{info.memInfo}[/]")
-            Markup($"[{colorScheme.LabelColor}]CPU:[/] [{colorScheme.ValueColor}]{info.cpuModel}[/]")
-            Markup($"[{colorScheme.LabelColor}]LocalIP:[/] [{colorScheme.ValueColor}]{info.localIp}[/]")
+            createInfoLine "Distribution:" info.distroName
+            createInfoLine "Kernel:" info.kernelName
+            createInfoLine "Shell:" info.shell
+            createInfoLine "User:" info.user
+            createInfoLine "Hostname:" info.hostName
+            createInfoLine "Uptime:" info.upTime
+            createInfoLine "Memory:" info.memInfo
+            createInfoLine "CPU:" info.cpuModel
+            createInfoLine "LocalIP:" info.localIp
         }
 
     let textPanel = Rows rows :> IRenderable
