@@ -52,7 +52,7 @@ The **DistroName** display mode was part of the original vision - displaying sys
 
 ---
 
-## ✨ Features
+## Features
 
 **System Information:**
 - Distribution/OS name and version
@@ -78,7 +78,7 @@ The **DistroName** display mode was part of the original vision - displaying sys
 
 ---
 
-## 📦 Installation
+## Installation
 
 ### Prerequisites
 
@@ -91,7 +91,7 @@ dotnet tool install --global fitch
 ```
 
 <details>
-<summary><b>Option 2: Build from Source</b></summary>
+<summary><b>📦 Option 2: Build from Source</b></summary>
 
 <br>
 
@@ -131,7 +131,7 @@ dotnet tool install --global fitch
 
 ---
 
-## 🚀 Usage
+## Usage
 
 Simply run:
 ```bash
@@ -146,7 +146,7 @@ fitch
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 Fitch creates a configuration file on first run with sensible defaults.
 
@@ -238,10 +238,10 @@ distronameheadercolor = "DarkRed"
 
 ---
 
-## 🔧 Optional Dependencies
+## Optional Dependencies
 
 <details>
-<summary><b>GPU Detection (Linux)</b></summary>
+<summary><b>🔧 GPU Detection (Linux)</b></summary>
 
 <br>
 
@@ -273,10 +273,10 @@ Without `pciutils`, fitch will still work but won't display GPU information.
 
 ---
 
-## 🛠️ Building for Multiple Platforms
+## Building for Multiple Platforms
 
 <details>
-<summary><b>Build Instructions</b></summary>
+<summary><b>🛠️ Build Instructions</b></summary>
 
 <br>
 
@@ -313,10 +313,10 @@ dotnet publish -c Release -r win-arm64
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 <details>
-<summary><b>Technical Details</b></summary>
+<summary><b>🏗️ Technical Details</b></summary>
 
 <br>
 
@@ -345,10 +345,10 @@ This design allows:
 
 ---
 
-## 🐧 Supported Distributions
+## Supported Distributions
 
 <details>
-<summary><b>View All Supported Systems</b></summary>
+<summary><b>🐧 View All Supported Systems</b></summary>
 
 <br>
 
@@ -368,16 +368,16 @@ This design allows:
 
 ---
 
-## 📝 License
+## License
 
 MIT License - See [LICENSE](LICENSE) file for details.
 
 Original work Copyright (c) 2022-2024 Luis Quintanilla, Luis Angel Mendez Gortz  
-Modified work Copyright (c) 2026 [Your Name]
+Modified work Copyright (c) 2026 Jonas Lara
 
 ---
 
-## 🙏 Acknowledgements
+## Acknowledgements
 
 <details>
 <summary><b>Credits & Inspiration</b></summary>
@@ -402,7 +402,7 @@ Modified work Copyright (c) 2026 [Your Name]
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Feel free to:
 - Report bugs
@@ -414,35 +414,38 @@ Please ensure your code follows F# conventions and includes appropriate tests.
 
 ---
 
-## 📋 Changelog
+## Changelog
 
 <details>
-<summary><b>Version History</b></summary>
+<summary><b>📜 Version History</b></summary>
 
 <br>
 
 ### v2.0.0 (2026) - Major Update
-- ✨ PNG logo support replacing ASCII art
-- ✨ GPU detection (Windows, Linux, WSL)
-- ✨ Battery information display
-- ✨ Terminal emulator detection
-- ✨ Distribution-specific RGB color schemes
-- ✨ Enhanced configuration system
-- ✨ Improved Setup.sh with dependency checking
-- 🐛 Fixed case-sensitivity issues
-- 🐛 Fixed spacing in columns
-- 📝 All comments translated to English
+- Port to Windows with WMI-based implementation
+- PNG logo support replacing ASCII art
+- GPU detection (Windows, Linux, WSL)
+- Battery information display
+- Terminal emulator detection
+- Distribution-specific RGB color schemes
+- Enhanced configuration system
+- Implmemented DistroName mode with customizable colors
+- Implemented Setup.ps1 for Windows installation
+- Improved Setup.sh with dependency checking
+- Fixed case-sensitivity issues in distribution detection
+- Fixed spacing in columns
 
-### v1.x (2024) - Windows Support
-- ✨ Cross-platform support (Windows 10/11)
-- ✨ WMI-based Windows implementation
-- ✨ Runtime OS detection
+### v1.2 (2023) - Refactor code and add ASCI art logos
+- Refactored code for better maintainability
+- Added ASCII art logos for supported distributions
+- Improved configuration system with display modes and color options
 
-### v1.0 (2022-2024) - Original
-- ✨ Initial Linux support
-- ✨ ASCII art logos
-- ✨ Basic system information
-- ✨ Inspired by Nitch and Neofetch
+### v1.0 (2022-2023) - Original
+- Initial Linux support
+- ASCII art logos
+- Basic system information
+- Inspired by Nitch and Neofetch
+- Nuget package release
 
 </details>
 
