@@ -21,10 +21,12 @@ let loadLogo (logo: string) =
       let fallbackStream = assembly.GetManifestResourceStream("Lib.Logos.linux.png")
       CanvasImage(fallbackStream)
   
-  // Usar mejor algoritmo de resampling para mayor nitidez
-  image.Resampler <- SixLabors.ImageSharp.Processing.KnownResamplers.Lanczos3
-  image.MaxWidth <- 20
-  image :> IRenderable
+  image.MaxWidth <- 16
+  
+  // Agregar margen al logo
+  let padder = Padder(image :> IRenderable)
+  padder.Padding <- Padding(10, 2, 0, 2) // izquierda, arriba, derecha, abajo
+  padder :> IRenderable
 
 let getColorFromString (colorName: string) =
   try
@@ -65,7 +67,7 @@ let displayInfo () =
 
     let alignedTextPanel = 
         let padder = Padder(textPanel)
-        padder.Padding <- Padding(0, 2, 0, 0) 
+        padder.Padding <- Padding(1, 2, 0, 0) // Ajustar espacio entre logo y texto
         padder :> IRenderable
 
     let headerPanel : IRenderable =
