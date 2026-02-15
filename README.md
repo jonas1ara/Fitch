@@ -2,7 +2,8 @@
 
 A fast, cross-platform system information tool written in F#.
 
-![Fitch CLI Tool](./images/fitch.gif)
+![fitch](https://github.com/user-attachments/assets/fe6841e4-60ba-4833-ba0d-9c5705017b73)
+
 
 [![Generic badge](https://img.shields.io/badge/Made%20with-FSharp-rgb(1,143,204).svg)](https://shields.io/)
 ![Tests][tests]
