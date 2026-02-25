@@ -22,7 +22,7 @@ The original project brought system information display to Linux using F#. This 
 
 <br>
 
-### Original Project (2022-2024)
+### Original Project (2022-2023)
 - Created by Luis Quintanilla
 - Linux-only support with Spectre.Console for rendering
 - Basic system information display
