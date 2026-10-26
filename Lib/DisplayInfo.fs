@@ -9,6 +9,8 @@ open Lib.Colorize
 
 let normalizeLogoName (logo: string) =
   match logo.ToLower().Trim() with
+  | "windows 10" -> "windows 10"
+  | "windows 11" -> "windows 11"
   | d when d.Contains("windows") -> "windows 11"
   | "linuxmint" | "linux mint" -> "mint"
   | d -> d
