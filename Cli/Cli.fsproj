@@ -5,7 +5,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <InvariantGlobalization>true</InvariantGlobalization>
     <LangVersion>preview</LangVersion>
-    <Version>2.1.0</Version>
+    <Version>2.1.1</Version>
     <PackageId>fitch</PackageId>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>fitch</ToolCommandName>
