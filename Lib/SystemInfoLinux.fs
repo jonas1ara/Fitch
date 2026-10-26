@@ -15,8 +15,9 @@ let getDistroId (fileName: string) =
 
     let configProperties =
       lines
+      |> Seq.filter (fun x -> x.Contains('='))
       |> Seq.map (fun x ->
-        let values = x.Split('=')
+        let values = x.Split('=', 2)
         (values[0], values[1]))
       |> Seq.filter (fun (k, v) -> k = "ID")
       |> List.ofSeq
@@ -37,8 +38,9 @@ let getDistroName (fileName: string) =
 
     let configProperties =
       lines
+      |> Seq.filter (fun x -> x.Contains('='))
       |> Seq.map (fun x ->
-        let values = x.Split('=')
+        let values = x.Split('=', 2)
         (values[0], values[1]))
       |> Seq.filter (fun (k, v) -> k = "PRETTY_NAME")
       |> List.ofSeq
@@ -53,14 +55,22 @@ let getDistroName (fileName: string) =
   | false -> ""
 
 let getHostName (fileName: string) =
-  match File.Exists(fileName) with
-  | true ->
-    let lines = File.ReadLines(fileName) |> List.ofSeq
+  let fromFile =
+    match File.Exists(fileName) with
+    | true ->
+      let lines = File.ReadLines(fileName) |> List.ofSeq
+      match lines.IsEmpty with
+      | true -> ""
+      | false -> lines.Head.Trim()
+    | false -> ""
 
-    match lines.IsEmpty with
-    | true -> ""
-    | false -> lines.Head
-  | false -> ""
+  if not (String.IsNullOrWhiteSpace(fromFile)) then
+    fromFile
+  else
+    try
+      Dns.GetHostName()
+    with
+    | _ -> "localhost"
 
 let getKernel (fileName: string) =
   match File.Exists(fileName) with
@@ -152,17 +162,21 @@ let getTerminal () =
   | _ -> "Unknown"
 
 let getLocalIpAddress () =
-  let hostName = Dns.GetHostName()
-  let addressList = Dns.GetHostEntry(hostName).AddressList |> List.ofArray
+  try
+    let hostName = Dns.GetHostName()
+    let addressList = Dns.GetHostEntry(hostName).AddressList |> List.ofArray
 
-  match addressList.IsEmpty with
-  | true -> ""
-  | false ->
-    addressList
-    |> List.rev
-    |> List.tryItem 2
-    |> Option.map string
-    |> Option.defaultValue ""
+    match addressList.IsEmpty with
+    | true -> ""
+    | false ->
+      addressList
+      |> List.rev
+      |> List.tryItem 2
+      |> Option.orElseWith (fun () -> List.tryHead addressList)
+      |> Option.map string
+      |> Option.defaultValue ""
+  with
+  | _ -> ""
 
 let getPublicIpAddressAsync (ipProvider: string) =
   async {
@@ -186,6 +200,13 @@ let getUptime (fileName: string) =
 
 let getUser (envVar: string) =
   Environment.GetEnvironmentVariable(envVar)
+  |> Option.ofObj
+  |> Option.filter (fun s -> not (String.IsNullOrWhiteSpace(s)))
+  |> Option.defaultWith (fun () ->
+    try
+      Environment.UserName
+    with
+    | _ -> "user")
 
 let getCPUModelName (fileName: string) =
   match File.Exists(fileName) with

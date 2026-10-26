@@ -1,18 +1,160 @@
 name: tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/dotnet/sdk:10.0
+  vm-test:
+    name: E2E Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Run tests
-      run: |
-        dotnet tool restore
-        dotnet paket restore
-        dotnet test
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore tools and dependencies
+        run: |
+          dotnet tool restore
+          dotnet paket restore
+
+      - name: Run unit tests
+        run: dotnet test --configuration Release
+
+      - name: Pack and install fitch global tool
+        run: |
+          dotnet pack Cli/Cli.fsproj --configuration Release --output ./nupkgs
+          dotnet tool install --global fitch --add-source ./nupkgs
+
+      - name: Run fitch E2E on Linux VM
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          export PATH="$PATH:$HOME/.dotnet/tools"
+          echo "=== Running fitch (Logo mode) ==="
+          OUTPUT_LOGO=$(fitch)
+          echo "$OUTPUT_LOGO"
+
+          echo "$OUTPUT_LOGO" | grep -q "Distribution:"
+          echo "$OUTPUT_LOGO" | grep -q "Kernel:"
+          echo "$OUTPUT_LOGO" | grep -q "Memory:"
+          echo "$OUTPUT_LOGO" | grep -q "CPU:"
+
+          echo "=== Running fitch (DistroName mode) ==="
+          mkdir -p "$HOME/.config/fitch"
+          printf 'displaymode = "distroname"\nlogoposition = "left"\ndistronamelabelcolor = "Cyan"\ndistronameheadercolor = "Blue"\n' > "$HOME/.config/fitch/.fitch"
+          OUTPUT_DISTRONAME=$(fitch)
+          echo "$OUTPUT_DISTRONAME"
+          echo "$OUTPUT_DISTRONAME" | grep -q "Distribution:"
+
+          {
+            echo "### 🐧 Linux VM (\`${{ matrix.os }}\`)"
+            echo "#### Logo Mode"
+            echo '```text'
+            echo "$OUTPUT_LOGO"
+            echo '```'
+            echo "#### DistroName Mode"
+            echo '```text'
+            echo "$OUTPUT_DISTRONAME"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Run fitch E2E on Windows VM
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $env:PATH += ";$HOME\.dotnet\tools"
+          Write-Host "=== Running fitch (Logo mode) ==="
+          $outputLogo = fitch | Out-String
+          Write-Host $outputLogo
+
+          if ($outputLogo -notmatch "Distribution:" -or $outputLogo -notmatch "Kernel:" -or $outputLogo -notmatch "Memory:") {
+            Write-Error "fitch output on Windows is missing expected fields!"
+            exit 1
+          }
+
+          Write-Host "=== Running fitch (DistroName mode) ==="
+          $configDir = Join-Path $env:USERPROFILE ".config\fitch"
+          New-Item -ItemType Directory -Force -Path $configDir | Out-Null
+          Set-Content -Path (Join-Path $configDir ".fitch") -Value "displaymode = `"distroname`"`nlogoposition = `"left`"`ndistronamelabelcolor = `"Cyan`"`ndistronameheadercolor = `"Blue`""
+          $outputDistroName = fitch | Out-String
+          Write-Host $outputDistroName
+
+          if ($outputDistroName -notmatch "Distribution:") {
+            Write-Error "fitch DistroName mode output on Windows is missing Distribution!"
+            exit 1
+          }
+
+          @"
+          ### 🪟 Windows VM (``${{ matrix.os }}``)
+          #### Logo Mode
+          ``````text
+          $outputLogo
+          ``````
+          #### DistroName Mode
+          ``````text
+          $outputDistroName
+          ``````
+          "@ | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
+  distro-containers-test:
+    name: Distro Test (${{ matrix.distro }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - distro: Ubuntu
+            image: ubuntu:24.04
+          - distro: Debian
+            image: debian:bookworm
+          - distro: Fedora
+            image: fedora:latest
+          - distro: Arch Linux
+            image: archlinux:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish self-contained Linux binary
+        run: |
+          dotnet tool restore
+          dotnet paket restore
+          dotnet publish Cli/Cli.fsproj -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o ./publish-linux
+
+      - name: Run fitch inside ${{ matrix.distro }} container
+        run: |
+          OUTPUT=$(docker run --rm -v "$PWD/publish-linux:/app:ro" ${{ matrix.image }} /bin/sh -c '
+            export HOME=/tmp
+            mkdir -p /tmp/.config/fitch
+            printf "displaymode = \"distroname\"\nlogoposition = \"left\"\n" > /tmp/.config/fitch/.fitch
+            /app/Cli
+          ')
+          echo "$OUTPUT"
+          echo "$OUTPUT" | grep -q "Distribution:"
+          echo "$OUTPUT" | grep -q "Kernel:"
+
+          {
+            echo "### 📦 ${{ matrix.distro }} (\`${{ matrix.image }}\`)"
+            echo '```text'
+            echo "$OUTPUT"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
