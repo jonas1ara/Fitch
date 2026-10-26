@@ -30,7 +30,7 @@ let getColorScheme (distroId: string) : ColorScheme =
           ValueColor = Color.White
           HeaderColor = Color(23uy, 147uy, 209uy) }
     
-    | "linux mint" | "mint" -> 
+    | "linuxmint" | "linux mint" | "mint" -> 
         { LabelColor = Color(135uy, 195uy, 69uy)  // Mint Green RGB
           ValueColor = Color.White
           HeaderColor = Color(135uy, 195uy, 69uy) }
@@ -45,7 +45,7 @@ let getColorScheme (distroId: string) : ColorScheme =
           ValueColor = Color.White
           HeaderColor = Color(13uy, 90uy, 167uy) }
     
-    | "windows 10" | "windows 11" | "windows" -> 
+    | d when d.Contains("windows") -> 
         { LabelColor = Color(255uy, 209uy, 93uy)  // Windows Yellow RGB
           ValueColor = Color.White
           HeaderColor = Color(255uy, 209uy, 93uy) }

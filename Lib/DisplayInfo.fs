@@ -1,4 +1,4 @@
-﻿module DisplayInfo
+module DisplayInfo
 
 open System.Reflection
 open Spectre.Console
@@ -7,10 +7,16 @@ open Lib.SystemInfo
 open Lib.Types
 open Lib.Colorize
 
+let normalizeLogoName (logo: string) =
+  match logo.ToLower().Trim() with
+  | d when d.Contains("windows") -> "windows 11"
+  | "linuxmint" | "linux mint" -> "mint"
+  | d -> d
+
 let loadLogo (logo: string) =
   let assembly = Assembly.GetExecutingAssembly()
   
-  let logoLower = logo.ToLower()
+  let logoLower = normalizeLogoName logo
   let resourceName = $"Lib.Logos.{logoLower}.png"
   
   use stream = assembly.GetManifestResourceStream(resourceName)
@@ -19,7 +25,7 @@ let loadLogo (logo: string) =
     if stream <> null then
       CanvasImage(stream)
     else
-      let fallbackStream = assembly.GetManifestResourceStream("Lib.Logos.linux.png")
+      use fallbackStream = assembly.GetManifestResourceStream("Lib.Logos.linux.png")
       CanvasImage(fallbackStream)
   
   image.MaxWidth <- 16
