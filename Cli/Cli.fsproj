@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <LangVersion>preview</LangVersion>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <PackageId>fitch</PackageId>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>fitch</ToolCommandName>

@@ -15,19 +15,19 @@ echo " "
 echo "Building for Linux x64..."
 cd Cli
 dotnet publish -c Release -r linux-x64
-echo "✓ Linux x64 build complete: bin/Release/net8.0/linux-x64/publish/"
+echo "✓ Linux x64 build complete: bin/Release/net10.0/linux-x64/publish/"
 
 # Build for Windows x64
 echo ""
 echo "Building for Windows x64..."
 dotnet publish -c Release -r win-x64
-echo "✓ Windows x64 build complete: bin/Release/net8.0/win-x64/publish/"
+echo "✓ Windows x64 build complete: bin/Release/net10.0/win-x64/publish/"
 
 # Build for Windows ARM64
 echo ""
 echo "Building for Windows ARM64..."
 dotnet publish -c Release -r win-arm64
-echo "✓ Windows ARM64 build complete: bin/Release/net8.0/win-arm64/publish/"
+echo "✓ Windows ARM64 build complete: bin/Release/net10.0/win-arm64/publish/"
 
 # Back to root
 cd ..

@@ -89,7 +89,7 @@ The **DistroName** display mode was part of the original vision - displaying sys
 
 ### Prerequisites
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 
 ### Option 1: Install from NuGet (Recommended)
 
